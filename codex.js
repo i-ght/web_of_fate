@@ -149,7 +149,7 @@ class WebOfFate extends Force {
   radiate() {
     const mymy = this;
     fillRect(
-      this.gfx,
+      mymy.gfx,
       dequeue(colors),
       mymy.domain.x,
       mymy.domain.y,
