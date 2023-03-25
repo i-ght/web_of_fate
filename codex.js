@@ -148,40 +148,54 @@ class WebOfFate extends Force {
 
   radiate() {
     const mymy = this;
-
-
-    fillRect(this.gfx, dequeue(colors), mymy.domain.x, mymy.domain.y, mymy.sideLength, mymy.sideLength);
+    fillRect(
+      this.gfx,
+      dequeue(colors),
+      mymy.domain.x,
+      mymy.domain.y,
+      mymy.sideLength,
+      mymy.sideLength
+    );
   }
 }
 
 function changePhase(phase) {
-  const {web} = phase;
-  web.advance();
+  for (const web of phase.fate) {
+    web.advance();
 
-  const xyOrNone = web.outOfBounds();
-  if (xyOrNone != OptionOfXAndOrY.NONE) {
-    if (Bounds.outXY(xyOrNone)) {
-      web.changeDir(
-        DIR_CHANGES[OptionOfXAndOrY.X | OptionOfXAndOrY.Y]
-      );  
-    } else if (Bounds.outY(xyOrNone)) {
-      web.changeDir(
-          DIR_CHANGES[OptionOfXAndOrY.Y]
-      );
-    } else if (Bounds.outX(xyOrNone)) {
-      web.changeDir(
-          DIR_CHANGES[OptionOfXAndOrY.X]
-      );
+    const xyOrNone = web.outOfBounds();
+    if (xyOrNone != OptionOfXAndOrY.NONE) {
+      if (Bounds.outXY(xyOrNone)) {
+        web.changeDir(
+          DIR_CHANGES[OptionOfXAndOrY.X | OptionOfXAndOrY.Y]
+        );  
+      } else if (Bounds.outY(xyOrNone)) {
+        web.changeDir(
+            DIR_CHANGES[OptionOfXAndOrY.Y]
+        );
+      } else if (Bounds.outX(xyOrNone)) {
+        web.changeDir(
+            DIR_CHANGES[OptionOfXAndOrY.X]
+        );
+      }
     }
+    web.radiate();
   }
-  web.radiate();
-  
 }
 
 function codex() {
   const [_, gfx] = getGfxCtx();
-  const web = new WebOfFate(gfx, new Domain(x=0, y=0), new Momentum(x=6, y=9), 9);
-  const phase = {web};
+  const fate = [];
+  for (let i = 0; i < 1; i++) { 
+    const web = new WebOfFate(
+      gfx,
+      new Domain(x=i*223, y=i*232),
+      new Momentum(x=6, y=9),
+      9
+    );
+    fate.push(web);
+  }
+  const phase = {fate};
 
   setInterval(changePhase, 1000/144, phase)
 }
