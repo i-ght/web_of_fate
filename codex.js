@@ -50,6 +50,16 @@ class Bounds {
   static outXY(a) { return a & OptionOfXAndOrY.X && a & OptionOfXAndOrY.Y; }
 }
 
+class Vector {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+class Domain extends Vector { }
+class Momentum extends Vector { }
+
 class Force {
   constructor(gfx, domain, momentum) {
     this.gfx = gfx;
@@ -159,7 +169,7 @@ function changePhase(phase) {
 
 function codex() {
   const [_, gfx] = getGfxCtx();
-  const space = new WebOfFate(gfx, {x: 0, y:0}, {x: 6, y:9}, 9);
+  const space = new WebOfFate(gfx, new Domain(x=0, y=0), new Momentum(x=6, y=9), 9);
   const phase = {space};
 
   setInterval(changePhase, 1000/144, phase)
