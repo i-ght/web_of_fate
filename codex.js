@@ -55,7 +55,17 @@ class Vector {
     this.x = x;
     this.y = y;
   }
-}
+
+  add(value) {
+    this.x = this.x + value.x;
+    this.y = this.y + value.y;
+  }
+  mult(value) {
+    this.x = this.x * value.x;
+    this.y = this.y * value.y;
+  }
+  
+} 
 
 class Domain extends Vector { }
 class Momentum extends Vector { }
@@ -72,13 +82,11 @@ class Force {
   }
   
   advance() {
-    this.domain.x = this.domain.x + this.momentum.x;
-    this.domain.y = this.domain.y + this.momentum.y;
+    this.domain.add(this.momentum);
   }
 
   changeDir(dir) {
-    this.momentum.x = this.momentum.x * dir.x;
-    this.momentum.y = this.momentum.y * dir.y;  
+    this.momentum.mult(dir);
   }
   
   outOfBounds() {
@@ -147,33 +155,33 @@ class WebOfFate extends Force {
 }
 
 function changePhase(phase) {
-  const {space} = phase;
-  space.advance();
+  const {web} = phase;
+  web.advance();
 
-  const xyOrNone = space.outOfBounds();
+  const xyOrNone = web.outOfBounds();
   if (xyOrNone != OptionOfXAndOrY.NONE) {
     if (Bounds.outXY(xyOrNone)) {
-      space.changeDir(
+      web.changeDir(
         DIR_CHANGES[OptionOfXAndOrY.X | OptionOfXAndOrY.Y]
       );  
     } else if (Bounds.outY(xyOrNone)) {
-      space.changeDir(
+      web.changeDir(
           DIR_CHANGES[OptionOfXAndOrY.Y]
       );
     } else if (Bounds.outX(xyOrNone)) {
-      space.changeDir(
+      web.changeDir(
           DIR_CHANGES[OptionOfXAndOrY.X]
       );
     }
   }
-  space.radiate();
+  web.radiate();
   
 }
 
 function codex() {
   const [_, gfx] = getGfxCtx();
-  const space = new WebOfFate(gfx, new Domain(x=0, y=0), new Momentum(x=6, y=9), 9);
-  const phase = {space};
+  const web = new WebOfFate(gfx, new Domain(x=0, y=0), new Momentum(x=6, y=9), 9);
+  const phase = {web};
 
   setInterval(changePhase, 1000/144, phase)
 }
