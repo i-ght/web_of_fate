@@ -140,21 +140,7 @@ class WebOfFate extends Force {
 
   radiate() {
     const mymy = this;
-    const xyOrNone = mymy.outOfBounds();
 
-    if (Bounds.outXY(xyOrNone)) {
-        mymy.changeDir(
-          DIR_CHANGES[OptionOfXAndOrY.X | OptionOfXAndOrY.Y]
-        );  
-    } else if (Bounds.outY(xyOrNone)) {
-      mymy.changeDir(
-          DIR_CHANGES[OptionOfXAndOrY.Y]
-      );
-    } else if (Bounds.outX(xyOrNone)) {
-      mymy.changeDir(
-          DIR_CHANGES[OptionOfXAndOrY.X]
-      );
-    }
 
     fillRect(this.gfx, dequeue(colors), mymy.domain.x, mymy.domain.y, mymy.sideLength, mymy.sideLength);
   }
@@ -163,6 +149,23 @@ class WebOfFate extends Force {
 function changePhase(phase) {
   const {space} = phase;
   space.advance();
+
+  const xyOrNone = space.outOfBounds();
+  if (xyOrNone != OptionOfXAndOrY.NONE) {
+    if (Bounds.outXY(xyOrNone)) {
+      space.changeDir(
+        DIR_CHANGES[OptionOfXAndOrY.X | OptionOfXAndOrY.Y]
+      );  
+    } else if (Bounds.outY(xyOrNone)) {
+      space.changeDir(
+          DIR_CHANGES[OptionOfXAndOrY.Y]
+      );
+    } else if (Bounds.outX(xyOrNone)) {
+      space.changeDir(
+          DIR_CHANGES[OptionOfXAndOrY.X]
+      );
+    }
+  }
   space.radiate();
   
 }
