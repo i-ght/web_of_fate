@@ -130,7 +130,8 @@ const colors =  [
   "green",
   "blue",
   "cyan",
-  "purple"
+  "purple",
+  "orange"
 ];
 
 /*
@@ -181,6 +182,8 @@ function changePhase(phase) {
     }
     web.radiate();
   }
+
+  requestAnimationFrame(_ => changePhase(phase));
 }
 
 function codex() {
@@ -195,7 +198,7 @@ function codex() {
     );
     fate.push(web);
   }
-  const phase = {fate};
 
-  setInterval(changePhase, 1000/144, phase)
+  const phase = {fate};
+  requestAnimationFrame(_ => changePhase(phase));
 }
